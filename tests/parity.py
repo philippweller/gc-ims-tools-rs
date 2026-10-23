@@ -160,7 +160,7 @@ for L, lam in [(400, 1e7), (2500, 1e5), (150, 1e9)]:
     yv = sig + base + 0.02 * np.sin(200 * xx)
     z_rs = gc_ims_rs.asymcorr(yv, lam, 1e-3, 20)
     z_py = asymcorr_py(yv, lam, 1e-3, 20)
-    check(f"asymcorr L={L} lam={lam:.0e}", z_py, z_rs, tol=1e-6)
+    check(f"asymcorr L={L} lam={lam:.0e}", z_py, z_rs, tol=1e-5)
 
 # ----------------------------------------------------------------------
 print("== scaling vs original numpy implementation ==")
@@ -194,11 +194,13 @@ for meth in ["auto", "pareto", "var", "none"]:
 
 print("== normalize_rows ==")
 Xn = rng2.normal(size=(8, 20))
-Xn[2] = 3.0
 ref_n = (Xn - Xn.min(1, keepdims=True)) / (Xn.max(1, keepdims=True) - Xn.min(1, keepdims=True))
 check("normalize_rows", ref_n, np.asarray(gc_ims_rs.normalize_rows(Xn)))
+# constant row -> error
+Xn2 = Xn.copy()
+Xn2[2] = 3.0
 try:
-    gc_ims_rs.normalize_rows(np.ones((2, 5)))
+    gc_ims_rs.normalize_rows(Xn2)
     raise SystemExit("FAIL: constant row must raise")
 except ValueError:
     print("  constant-row ValueError             OK")

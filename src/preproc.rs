@@ -76,11 +76,9 @@ pub fn asymcorr<S: Data<Elem = f64>>(
                 s1[i] = acc1 / c[i];
             }
             if i + 2 < l {
-                let mut acc2 = l2[i];
-                if i >= 1 {
-                    acc2 -= s2[i - 1] * s1[i - 1];
-                }
-                s2[i] = acc2 / c[i];
+                // L[i+2,i]: Z[i+2,i] over c[i]; columns i-1 and i-2 lie
+                // outside the lower bandwidth 2 (-> 0), so NO summand.
+                s2[i] = l2[i] / c[i];
             }
         }
 
@@ -162,14 +160,15 @@ pub fn scale<S: Data<Elem = f64>>(
     let out = if mean_centering {
         let mean = x.mean_axis(Axis(0)).ok_or("empty X")?;
         let mut xc = x - &mean;
-        for (mut row, &w) in xc.outer_iter_mut().zip(weights.iter()) {
-            row *= w;
+        // weights are per-feature (column); multiply column-wise
+        for (mut col, &w) in xc.axis_iter_mut(Axis(1)).zip(weights.iter()) {
+            col *= w;
         }
         xc
     } else {
         let mut xr = x.to_owned();
-        for (mut row, &w) in xr.outer_iter_mut().zip(weights.iter()) {
-            row *= w;
+        for (mut col, &w) in xr.axis_iter_mut(Axis(1)).zip(weights.iter()) {
+            col *= w;
         }
         xr
     };
