@@ -18,7 +18,7 @@ from sklearn.cross_decomposition import PLSRegression
 from sklearn.datasets import load_iris, load_wine, load_breast_cancer
 from sklearn.preprocessing import LabelBinarizer
 
-import gc_ims_rs
+import gc_ims_rs  # top-level shim: provided by the ims_rs wheel (module gc_ims_rs)
 
 TOL = 1e-8
 

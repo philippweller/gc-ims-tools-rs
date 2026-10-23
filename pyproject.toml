@@ -13,4 +13,5 @@ dependencies = ["numpy>=1.23.5,<1.25"]
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
+python-source = "python"
 module-name = "gc_ims_rs"
