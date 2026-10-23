@@ -1,0 +1,16 @@
+[build-system]
+requires = ["maturin>=1.4,<2"]
+build-backend = "maturin"
+
+[project]
+name = "gc-ims-tools-rs"
+version = "0.1.0"
+description = "Rust numerical kernel for gc-ims-tools (chemometrics for GC-IMS data)"
+requires-python = ">=3.9,<3.12"
+license = { text = "BSD-3-Clause" }
+authors = [{ name = "Philipp Weller", email = "philippweller@users.noreply.github.com" }]
+dependencies = ["numpy>=1.23.5,<1.25"]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+module-name = "gc_ims_rs"
