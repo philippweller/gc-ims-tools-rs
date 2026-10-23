@@ -33,6 +33,26 @@ from ims import PLS_DA, PLSR   # now running on the Rust kernel
 print(gc_ims_rs.is_active())
 ```
 
+## CLI (no Python needed)
+
+`gcims` is a standalone Rust binary (install: `cargo install --path .` or copy
+`target/release/gcims`). Input CSVs: one sample per row; a column named
+`class`/`label` is the target (or pass `--labels <file>`).
+
+```sh
+# fit a PLS-DA model (pareto scaling, 3 components), save model + train acc
+gcims plsda fit -x train.csv -c 3 --scaling pareto -o model.bin
+
+# predict classes for new samples (uses the model's stored scaling + classes)
+gcims plsda pred -m model.bin -x test.csv -o preds.csv
+
+# variable importance (VIP), write feature index/value
+gcims plsda vip -m model.bin -o vip.csv
+
+# AsLS baseline correction, per row
+gcims asymcorr -x data.csv --lam 1e7 -o corrected.csv
+```
+
 ## Build (macOS, x86_64 conda Python)
 
 The user's scientific Python is an x86_64 conda build under Rosetta, so build

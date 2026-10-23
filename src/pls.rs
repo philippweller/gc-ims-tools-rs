@@ -180,7 +180,7 @@ fn power_method(
 }
 
 /// Result of a PLS fit, mirroring the sklearn attributes gc-ims-tools uses.
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub struct PlsFit {
     pub x_weights: Array2<f64>,  // (p, A)
     pub y_weights: Array2<f64>,   // (q, A)
